@@ -1,11 +1,7 @@
 const http = require("http");
 const fs = require("fs");
-const ejs = require("ejs"); //ejsモジュールをロード
+const ejs = require("ejs");
 
-/*
-fs.readFileSync( ファイル, エンコーディング)でファイル読み込み(Syncは同期処理)
-サーバーが起動する前なので同期処理でもよいという考え。立ち上がりが遅くなるだけ。
-*/
 const index_page = fs.readFileSync("./index.ejs", "utf8");
 
 var server = http.createServer(getFromClient);
@@ -13,11 +9,13 @@ var server = http.createServer(getFromClient);
 server.listen(3000);
 console.log("Server start!");
 
-
 function getFromClient(request, response) {
 
-  /* ejs.render()でレンダリング */
-  var content = ejs.render(index_page);
+  /* ejs.render()の第２引数に<%= %>で使用するものをオブジェクトで記述 */
+  var content = ejs.render(index_page, {
+    title: "Indexページ",
+    content: "これはテンプレートを使ったサンプルページです",
+  });
 
   response.writeHead(200, { "Content-Type": "text/html" });
   response.write(content);
