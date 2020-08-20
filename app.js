@@ -1,8 +1,10 @@
 const http = require("http");
 const fs = require("fs");
 const ejs = require("ejs");
+const url = require("url"); //urlモジュールをロード
 
 const index_page = fs.readFileSync("./index.ejs", "utf8");
+const style_css = fs.readFileSync("./style.css", "utf8"); //style.cssを読み込み
 
 var server = http.createServer(getFromClient);
 
@@ -11,13 +13,31 @@ console.log("Server start!");
 
 function getFromClient(request, response) {
 
-  /* ejs.render()の第２引数に<%= %>で使用するものをオブジェクトで記述 */
-  var content = ejs.render(index_page, {
-    title: "Indexページ",
-    content: "これはテンプレートを使ったサンプルページです",
-  });
+  /* url.parse()でURLの構成要素に分ける */
+  var url_parts = url.parse(request.url);
 
-  response.writeHead(200, { "Content-Type": "text/html" });
-  response.write(content);
-  response.end();
+  /* ルーティング処理 */
+  switch (url_parts.pathname) {
+
+    case "/":
+      var content = ejs.render(index_page, {
+        title: "Index",
+        content: "これはテンプレートを使ったサンプルページです。",
+      });
+      response.writeHead(200, { "Content-Type": "text/html" });
+      response.write(content);
+      response.end();
+      break;
+
+    case "/style.css":
+      response.writeHead(200, { "Content-Type": "text/css" });
+      response.write(style_css);
+      response.end();
+      break;
+
+    default:
+      response.writeHead(200, { "Content-Type": "text/plain" });
+      response.end("no page...");
+      break;
+  }
 }
