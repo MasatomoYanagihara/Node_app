@@ -2,26 +2,36 @@ const http = require("http");
 const fs = require("fs");
 const ejs = require("ejs");
 const url = require("url");
-const qs = require("querystring"); //queryモジュールをロード
+const qs = require("querystring"); //★追加
 
 const index_page = fs.readFileSync("./index.ejs", "utf8");
 const other_page = fs.readFileSync("./other.ejs", "utf8");
+const style_css = fs.readFileSync("./style.css", "utf8");
 
 var server = http.createServer(getFromClient);
 
 server.listen(3000);
 console.log("Server start!");
 
+// ここまでメインプログラム==========
+
+// createServerの処理
 function getFromClient(request, response) {
-  var url_parts = url.parse(request.url, true);
+  var url_parts = url.parse(request.url, true); //★trueに
 
   switch (url_parts.pathname) {
     case "/":
-      response_index(request, response);
+      response_index(request, response); //★修正
       break;
 
     case "/other":
-      response_other(request, response);
+      response_other(request, response); //★修正
+      break;
+
+    case "/style.css":
+      response.writeHead(200, { "Content-Type": "text/css" });
+      response.write(style_css);
+      response.end();
       break;
 
     default:
@@ -31,7 +41,7 @@ function getFromClient(request, response) {
   }
 }
 
-/* indexのアクセス処理 */
+// ★indexのアクセス処理
 function response_index(request, response) {
   var msg = "これはIndexページです。";
   var content = ejs.render(index_page, {
@@ -43,22 +53,22 @@ function response_index(request, response) {
   response.end();
 }
 
-/* Otherのアクセス処理 */
+// ★otherのアクセス処理
 function response_other(request, response) {
   var msg = "これはOtherページです。";
 
-  /* POSTアクセス時の処理 */
+  // POSTアクセス時の処理
   if (request.method == "POST") {
     var body = "";
 
-    /* データ受信のイベント */
+    // データ受信のイベント処理
     request.on("data", (data) => {
       body += data;
     });
 
-    /* データ受信終了のイベント処理 */
+    // データ受信終了のイベント処理
     request.on("end", () => {
-      var post_data = qs.parse(body);
+      var post_data = qs.parse(body); // ★データのパース
       msg += "あなたは、「" + post_data.msg + "」と書きました。";
       var content = ejs.render(other_page, {
         title: "Other",
@@ -68,8 +78,9 @@ function response_other(request, response) {
       response.write(content);
       response.end();
     });
+
+    // GETアクセス時の処理
   } else {
-    /* GETアクセス時の処理 */
     var msg = "ページがありません。";
     var content = ejs.render(other_page, {
       title: "Other",
