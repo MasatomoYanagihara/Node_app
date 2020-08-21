@@ -15,16 +15,21 @@
   <div role="main">
     <p><%=content %></p>
     <table class="table">
+      <% var id = 0; %>
+      <% for(var key in data) { %>
 
-      <!-- for分で繰り返し値を入れていく -->
-      <% for(var k in data) { %>
-      <tr>
-        <th><%= k %></th>
-        <td><%= data[k] %></td>
-      </tr>
+      <!--
+      <%- %>はエスケープ処理をしない。 
+      data_itemファイルを読み込んでいる。
+      id、key、valの値を渡している。
+      -->
+      <%- include('data_item', 
+              {id:++id, key:key, val:[data[key]]}) %>
       <% } %>
     </table>
   </div>
 </body>
+
+
 
 </html>
