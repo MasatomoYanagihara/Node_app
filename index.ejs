@@ -14,12 +14,16 @@
   </header>
   <div role="main">
     <p><%=content %></p>
+    <table class="table">
 
-    <!-- formを設置(POST) -->
-    <form method="post" action="/other">
-      <input type="text" name="msg" class="form-control">
-      <input type="submit" value="Click" class="btn btn-primary">
-    </form>
+      <!-- for分で繰り返し値を入れていく -->
+      <% for(var k in data) { %>
+      <tr>
+        <th><%= k %></th>
+        <td><%= data[k] %></td>
+      </tr>
+      <% } %>
+    </table>
   </div>
 </body>
 
