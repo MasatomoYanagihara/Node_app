@@ -1,32 +1,27 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 
-/* GET home page. */
-/* 第１引数は"/hello"ではなく"/"となる。"/"は/hello/という意味。ルーティングはapp.jsでしている。 */
-router.get("/", function (req, res, next) {
-  var msg = "＊何か書いて送信してください。";
-  if (req.session.message != undefined) {
-    msg = "Last Message: " + req.session.message; //セッションから値を取り出している処理
-  }
+const sqlite3 = require("sqlite3"); 
 
-  var data = {
-    title: "Hello!",
-    content: msg
-  };
+// データベースオブジェクトの取得
+const db = new sqlite3.Database("mydb.sqlite3");
 
-  res.render("hello", data);
+// GETアクセスの処理
+router.get("/", (req, res, next) => {
+  // データベースのシリアライズ
+  db.serialize(() => {
+    //レコードを全て取り出す
+    db.all("select * from mydata", (err, rows) => {
+      // データベースアクセス完了時の処理
+      if (!err) {
+        var data = {
+          title: "Hello!",
+          content: rows, // 取得したレコードデータ
+        };
+        res.render("hello", data);
+      }
+    });
+  });
 });
-
-router.post('/post', (req, res, next) => {
-  var msg = req.body["message"];
-  req.session.message = msg; //セッションに保存している処理
-
-  var data = {
-    title: "Hello",
-    content: "あなたは、「" + msg + "」と送信しました。"
-  }
-
-  res.render('hello', data)
-})
 
 module.exports = router;
