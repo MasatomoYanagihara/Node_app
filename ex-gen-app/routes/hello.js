@@ -4,19 +4,22 @@ var router = express.Router();
 /* GET home page. */
 /* 第１引数は"/hello"ではなく"/"となる。"/"は/hello/という意味。ルーティングはapp.jsでしている。 */
 router.get("/", function (req, res, next) {
-
-  /* queryを取り出している。 */ 
-  var name = req.query.name;
-  var mail = req.query.mail;
-
   var data = {
     title: "Hello!",
-    content:
-      "あなたの名前は、" + name + "。<br>" +
-      "メールアドレスは、" + mail + "です。",
+    content: "＊何か書いて送信してください。"
   };
 
   res.render("hello", data);
 });
+
+router.post('/post', (req, res, next) => {
+  var msg = req.body["message"];
+  var data = {
+    title: "Hello",
+    content: "あなたは、「" + msg + "」と送信しました。"
+  }
+
+  res.render('hello', data)
+})
 
 module.exports = router;
