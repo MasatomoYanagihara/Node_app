@@ -1,26 +1,23 @@
-'use strict';
+"use strict";
 
-const { Model } = require('sequelize');
-
+// module.exportsは外部から使用できるようにする処理。
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
+
+  // オブジェクト作成、変数 = sequelize.define(モデル名, モデルの属性(カラムに相当), オプション);
+  const User = sequelize.define(
+    "User",
+    {
+      name: DataTypes.STRING,
+      pass: DataTypes.STRING,
+      mail: DataTypes.STRING,
+      age: DataTypes.INTEGER,
+    },
+    {}
+  );
+
+  User.associate = function (models) {
+    // associations can be defined here
   };
-  User.init({
-    name: DataTypes.STRING,
-    pass: DataTypes.STRING,
-    mail: DataTypes.STRING,
-    age: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+
   return User;
 };

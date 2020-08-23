@@ -1,6 +1,8 @@
 'use strict';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // テーブルを作成する処理
     await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
