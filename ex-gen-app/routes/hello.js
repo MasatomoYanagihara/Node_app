@@ -36,8 +36,8 @@ router.post(
   "/add",
   [
     // check(項目名, エラーメッセージ).メソッド()
-    check("name", "NAME は必ず入力して下さい。").notEmpty(),
-    check("mail", "MAIL はメールアドレスを記入して下さい。").isEmail(),
+    check("name", "NAME は必ず入力して下さい。").notEmpty().escape(),
+    check("mail", "MAIL はメールアドレスを記入して下さい。").isEmail().escape(),
     check("age", "AGE は年齢（整数）を入力下さい。").isInt(),
   ],
   (req, res, next) => {
@@ -57,7 +57,7 @@ router.post(
         content: result,
         form: req.body,
       };
-      
+
       res.render("hello/add", data);
     } else {
       var nm = req.body.name;
