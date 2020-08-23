@@ -4,11 +4,14 @@ const db = require("../models/index"); //Sequelizeで利用される全ての情
 
 /* GET users listing. */
 router.get("/", (req, res, next) => {
-
-  //db.Userでuserモデルにアクセス。findAll()で全レコード取得。そのデータがusrsに渡る。（非同期処理）
-  db.User.findAll().then((usrs) => {
+  const id = req.query.id;
+  db.User.findAll({
+    where: {
+      id: id,
+    },
+  }).then((usrs) => {
     var data = {
-      title: "User/Index",
+      title: "Users/Index",
       content: usrs,
     };
     res.render("users/index", data);
