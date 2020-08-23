@@ -118,6 +118,7 @@ router.get("/delete", (req, res, next) => {
   });
 });
 
+/* hello/delete/でのPOST処理 */
 router.post("/delete", (req, res, next) => {
   const id = req.body.id;
   db.serialize(() => {
@@ -126,6 +127,42 @@ router.post("/delete", (req, res, next) => {
   });
 
   res.redirect("/hello"); //削除したら一覧ページに戻す。
+});
+
+/* hello/find/でのGET処理 */
+router.get("/find", (req, res, next) => {
+  db.serialize(() => {
+    db.all("select * from mydata", (err, rows) => {
+      if (!err) {
+        var data = {
+          title: "Hello/find",
+          find: "",
+          content: "検索条件を入力して下さい。",
+          mydata: rows,
+        };
+        res.render("hello/find", data);
+      }
+    });
+  });
+});
+
+/* hello/find/でのPOST処理 */
+router.post("/find", (req, res, next) => {
+  var find = req.body.find;
+
+  db.serialize(() => {
+    db.all("select * from mydata where " + find, [], (err, rows) => {
+      if (!err) {
+        var data = {
+          title: "Hello/find",
+          find: find,
+          content: "検索条件 " + find,
+          mydata: rows,
+        };
+        res.render("hello/find", data);
+      }
+    });
+  });
 });
 
 module.exports = router;
