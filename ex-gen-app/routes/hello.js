@@ -87,11 +87,45 @@ router.post("/edit", (req, res, next) => {
 
   db.serialize(() => {
     db.run(
-      //レコードの更新はupdate文を使う。where句がないと全てのレコードが更新されてしまう。
-      "update mydata set name = ?, mail = ?, age = ? where id = ?", nm, ml, ag, id);
+      //レコードの更新はupdate文を使う。where句がないと全てのレコードが更新されてしまうので注意。
+      "update mydata set name = ?, mail = ?, age = ? where id = ?",
+      nm,
+      ml,
+      ag,
+      id
+    );
   });
 
-  res.redirect("/hello"); //編集したら一覧ページに戻す
+  res.redirect("/hello"); //編集したら一覧ページに戻す。
+});
+
+/* hello/delete/でのGET処理 */
+router.get("/delete", (req, res, next) => {
+  const id = req.query.id;
+
+  db.serialize(() => {
+    //select文で削除するレコードをidで指定する。
+    db.get("select * from mydata where id = ?", [id], (err, row) => {
+      if (!err) {
+        var data = {
+          title: "Hello/Delete",
+          content: "id = " + id + " のレコードを削除：",
+          mydata: row,
+        };
+        res.render("hello/delete", data);
+      }
+    });
+  });
+});
+
+router.post("/delete", (req, res, next) => {
+  const id = req.body.id;
+  db.serialize(() => {
+    //レコードの削除はdelete文を使う。where句がないと全てのレコードが削除されてしまうので注意。
+    db.run("delete from mydata where id = ?", id);
+  });
+
+  res.redirect("/hello"); //削除したら一覧ページに戻す。
 });
 
 module.exports = router;
