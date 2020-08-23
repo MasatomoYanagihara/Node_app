@@ -1,6 +1,5 @@
 "use strict";
 
-// module.exportsは外部から使用できるようにする処理。
 module.exports = (sequelize, DataTypes) => {
 
   // オブジェクト作成、変数 = sequelize.define(モデル名, モデルの属性(カラムに相当), オプション);
