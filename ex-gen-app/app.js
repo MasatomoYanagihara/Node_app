@@ -24,20 +24,22 @@ app.use(express.static(path.join(__dirname, "public")));
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var helloRouter = require("./routes/hello");
+var apiRouter = require("./routes/api");
 
 /* セッション利用の為の処理 */
 var session_opt = {
   secret: "keyboard dog", //秘密キーとなるテキスト
   resave: false, //セッションストアと呼ばれるところに強制的に値を保存する
   saveUninitialized: false, //初期化されていない値を強制的に保存する
-  cookie: { maxAge: 60 * 60 * 1000 } //Cookieの保管時間を設定。（１時間に設定。）
+  cookie: { maxAge: 60 * 60 * 1000 }, //Cookieの保管時間を設定。（１時間に設定。）
 };
-app.use(session(session_opt))
+app.use(session(session_opt));
 
 /* アクセスするルート設定 */
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/hello", helloRouter);
+app.use("/api", apiRouter);
 
 /* エラー用のapp.use作成 */
 app.use(function (req, res, next) {
