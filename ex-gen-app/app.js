@@ -25,6 +25,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var helloRouter = require("./routes/hello");
 var apiRouter = require("./routes/api");
+var boardsRouter = require("./routes/boards");
 
 /* セッション利用の為の処理 */
 var session_opt = {
@@ -40,6 +41,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/hello", helloRouter);
 app.use("/api", apiRouter);
+app.use("/boards", boardsRouter);
 
 /* エラー用のapp.use作成 */
 app.use(function (req, res, next) {
