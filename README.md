@@ -1,1 +1,1 @@
-node_app
+# Node.js学習用リポジトリ
